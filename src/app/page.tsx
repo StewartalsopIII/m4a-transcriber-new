@@ -50,6 +50,25 @@ export default function Home() {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFile = e.dataTransfer.files[0];
+    
+    if (droppedFile && droppedFile.type === 'audio/x-m4a') {
+      setFile(droppedFile);
+      setError('');
+    } else {
+      setError('Please upload an M4A file');
+      setFile(null);
+    }
+  };
+
   return (
     <main className="container mx-auto p-4 max-w-3xl">
       <div className="bg-white shadow-sm rounded-lg">
@@ -58,7 +77,11 @@ export default function Home() {
           
           <div className="space-y-6">
             {/* File Upload Section */}
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <div 
+              className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors duration-200"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
               <input
                 type="file"
                 accept=".m4a"
@@ -66,10 +89,10 @@ export default function Home() {
                 className="hidden"
                 id="file-upload"
               />
-              <label htmlFor="file-upload" className="cursor-pointer">
+              <label htmlFor="file-upload" className="cursor-pointer block">
                 <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
                 <span className="mt-2 block text-sm font-medium text-gray-600">
-                  {file ? file.name : 'Upload an M4A file'}
+                  {file ? file.name : 'Drag and drop an M4A file here, or click to upload'}
                 </span>
               </label>
             </div>
